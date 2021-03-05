@@ -15,7 +15,7 @@ db = SQLAlchemy(app)
 
 ###### Table Employees ######
 class Employees(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id          = db.Column(db.Integer, primary_key=True)
     firstname   = db.Column(db.String(30), nullable=False)
     lastname    = db.Column(db.String(30), nullable=False)
     phone       = db.Column(db.String(20), nullable=False)
@@ -37,13 +37,7 @@ class Positions(db.Model):
         
 @app.route('/')
 def Index():
-    views = db.session.query(
-        Employees.id, Employees.firstname, Employees.lastname, Positions.name
-    ).join(Employees, Employees.pos_id == Positions.id)\
-    .order_by(asc(Employees.id))\
-    .all()
-
-    return render_template('views/index.html', data = views)
+    return render_template('views/index.html', data = createViews())
 
 @app.route('/insert', methods=['GET', 'POST'])
 def insert():
@@ -60,7 +54,10 @@ def insert():
         flash("Employee Inserted Successfully.")
         return redirect(url_for('Index'))
     
-    return render_template("views/insert.html", positions = Positions.query.all())
+    return render_template("views/index.html",
+            data = createViews(),
+            positions = Positions.query.all(),
+            method = "INSERT")
 
 @app.route('/update/<id>', methods=['GET', 'POST'])
 def update(id):
@@ -76,7 +73,11 @@ def update(id):
         flash("Employee Updated Successfully.")
         return redirect(url_for('Index'))
     
-    return render_template("views/update.html", employee = Employees.query.get(id), positions = Positions.query.all())
+    return render_template("views/index.html",
+            data = createViews(),
+            employee = Employees.query.get(id),
+            positions = Positions.query.all(),
+            method = "UPDATE")
 
 @app.route('/delete/<id>', methods=['GET', 'POST'])
 def delete(id):
@@ -86,6 +87,15 @@ def delete(id):
 
     flash("Employee Deleted Successfully.")
     return redirect(url_for('Index'))
+
+def createViews() :
+    views = db.session.query(
+                Employees.id, Employees.firstname, Employees.lastname, Positions.name
+            ).join(Employees, Employees.pos_id == Positions.id)\
+            .order_by(asc(Employees.id))\
+            .all()
+
+    return views
 
 if __name__ == "__main__":
     db.create_all()

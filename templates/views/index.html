@@ -29,6 +29,14 @@
 
 <a href="{{ url_for('insert') }}" class="button is-link">Insert</a>
 
+{% if method == "INSERT" %}
+   {% include 'views/insert.html' %}
+{% endif %}
+
+{% if method == "UPDATE" %}
+   {% include 'views/update.html' %}
+{% endif %}
+
 <script>
     $('.btn-delete').on('click', function() {
         if (confirm("Are you sure to delete this?")) {
