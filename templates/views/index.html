@@ -1,0 +1,39 @@
+{% extends "views/layout.html" %}
+{% block body %}
+<table class="table">
+    <thead>
+       <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Position</th>
+          <th></th>
+       </tr>
+    </thead>
+    
+    <tbody>
+       {% for emp in data %}
+          <tr>
+             <td>{{ emp.firstname }}</td>
+             <td>{{ emp.lastname }}</td>
+             <td>{{ emp.name }}</td>
+             <td>
+                <div class="buttons">
+                    <a href="/update/{{ emp.id }}" class="button is-warning">Edit</a>
+                    <a href="#" class="button is-danger btn-delete" id-delete="{{ emp.id }}">Delete</a>
+                </div>
+             </td>
+          </tr>
+       {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('insert') }}" class="button is-link">Insert</a>
+
+<script>
+    $('.btn-delete').on('click', function() {
+        if (confirm("Are you sure to delete this?")) {
+            window.location.href = "/delete/" + $(this).attr('id-delete')
+        }
+    })
+</script>
+{% endblock %}
