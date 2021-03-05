@@ -34,24 +34,12 @@ class Positions(db.Model):
     
     def __init__(self, name):
         self.name = name
-
-###### Table View ######
-'''
-class Employees_View(db.Model):
-    id       = db.Column(db.Integer, primary_key=True)
-    name_Emp = db.Column(db.Integer, db.ForeignKey('employees.id'))
-    name_Pos = db.Column(db.Integer, db.ForeignKey('positions.id'))
-   
-    def __init__(self, name_Emp, name_Pos):
-        self.name_Emp = name_Emp
-        self.name_Pos = name_Pos
-'''
-
+        
 @app.route('/')
 def Index():
     views = db.session.query(
         Employees.id, Employees.firstname, Employees.lastname, Positions.name
-    ).outerjoin(Employees, Employees.pos_id == Positions.id)\
+    ).join(Employees, Employees.pos_id == Positions.id)\
     .order_by(asc(Employees.id))\
     .all()
 
